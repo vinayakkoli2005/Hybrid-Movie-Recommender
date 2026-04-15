@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(uv --version)",
+      "Bash(nvidia-smi)",
+      "Bash(git --version)",
+      "mcp__plugin_context-mode_context-mode__ctx_execute"
+    ]
+  }
+}

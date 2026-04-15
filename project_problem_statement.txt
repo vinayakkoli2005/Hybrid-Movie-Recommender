@@ -1,0 +1,12 @@
+For the project, you are free to choose any collaborative filtering dataset - not necessarily movielens. But the constraints are 
+1. The ratings should be binarized.
+2. This is because you have to submit NDCG and Hit Rate as metrics
+3. You will submit a PDF only with tables and a link to you video demonstration.
+
+Regarding Video Demonstration
+DO NOT SUBMIT the full video in Google Classroom. If I have to download anything like that, I will simply not check it. 
+You should put the video in YouTube - and share the link with me in the submitted report (PDF). That's all. 
+In summary the report should have
+a. Tables of Hit Rate
+b. Tables of NDCG
+c. Link to your demo.
