@@ -1,0 +1,7 @@
+# =============================================================================
+# Experiment: NeuMF Baseline
+# =============================================================================
+
+name:  baseline_neumf
+model: neumf
+out_path: ${results_dir}/baseline_neumf.json

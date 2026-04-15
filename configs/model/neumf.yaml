@@ -1,0 +1,24 @@
+# =============================================================================
+# Model: NeuMF (Neural Matrix Factorisation)
+# =============================================================================
+# Combines GMF (element-wise product of embeddings) and MLP pathways, whose
+# outputs are concatenated and passed through a final prediction layer.
+# Reference: He et al., Neural Collaborative Filtering, WWW 2017.
+# Expected HR@10 on ML-1M: ~0.69
+# =============================================================================
+
+name: neumf
+
+# Embedding dimensions — GMF and MLP use separate embedding tables
+gmf_embedding_dim: 64
+mlp_embedding_dim: 64
+
+# MLP hidden layer sizes (applied after concatenation of user+item embeddings)
+mlp_layers: [128, 64, 32]
+
+dropout:       0.0
+learning_rate: 0.001
+weight_decay:  1.0e-4
+n_epochs:      50
+batch_size:    1024
+n_neg_train:   4

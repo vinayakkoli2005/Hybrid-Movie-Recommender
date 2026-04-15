@@ -1,21 +1,35 @@
-data/raw/
-data/processed/
-results/*.json
-results/*.parquet
-results/tables.md
+# =============================================================================
+# CF Pipeline — .gitignore
+# =============================================================================
+# Raw data that is TOO LARGE for GitHub (>100 MB) and NOT used by pipeline
+# =============================================================================
+data/raw/tmdb/ratings.csv
+data/raw/tmdb/credits.csv
+
+# Python cache
 *.pyc
 __pycache__/
-.venv/
-.pytest_cache/
 *.egg-info/
-report/*.aux
-report/*.log
-report/*.out
+.pytest_cache/
+
+# Virtual environment
+.venv/
+
+# Hydra run outputs
 .hydra/
 outputs/
 multirun/
+
+# Model checkpoints
 checkpoints/
 *.ckpt
 *.pt
 *.bin
+
+# LaTeX build artifacts
+report/*.aux
+report/*.log
+report/*.out
+
+# macOS
 .DS_Store

@@ -1,0 +1,7 @@
+# =============================================================================
+# Experiment: Popularity Baseline
+# =============================================================================
+
+name:  baseline_pop
+model: popularity
+out_path: ${results_dir}/baseline_pop.json

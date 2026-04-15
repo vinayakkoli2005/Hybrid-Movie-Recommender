@@ -1,0 +1,13 @@
+# =============================================================================
+# Experiment: ItemKNN Baseline
+# =============================================================================
+# Memory-based CF. Shrinkage-cosine item-item similarity, top-k pruned.
+# Override k_neighbors / shrinkage from CLI for hyperparameter search:
+#   python scripts/eval.py experiment=baseline_itemknn experiment.k_neighbors=50
+# =============================================================================
+
+name:        baseline_itemknn
+model:       itemknn
+k_neighbors: 20
+shrinkage:   10
+out_path:    ${results_dir}/baseline_itemknn.json

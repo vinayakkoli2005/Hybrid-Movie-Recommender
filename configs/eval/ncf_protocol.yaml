@@ -1,0 +1,22 @@
+# =============================================================================
+# Evaluation protocol — NCF Leave-One-Out with 99 sampled negatives
+# =============================================================================
+# Standard protocol from He et al. (NeuMF, WWW 2017):
+#   - For each test user: 1 held-out positive + 99 randomly sampled negatives
+#   - Score all 100 candidates, rank by descending score
+#   - Report Hit Rate@K and NDCG@K for K ∈ {1, 5, 10, 20}
+#
+# This is the protocol used in all baselines and CF models in this project,
+# enabling direct comparison with published NeuMF / LightGCN / EASE^R numbers.
+# =============================================================================
+
+name: ncf_loo_99neg
+
+# K values to report in every result table
+ks: [1, 5, 10, 20]
+
+# Which split to evaluate on: "test" for final numbers, "val" for tuning
+split: test
+
+# Number of negatives sampled per user (frozen at prepare_data.py time)
+n_neg: 99

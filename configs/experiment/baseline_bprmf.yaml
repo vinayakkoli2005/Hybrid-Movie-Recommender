@@ -1,0 +1,7 @@
+# =============================================================================
+# Experiment: BPR-MF Baseline
+# =============================================================================
+
+name:  baseline_bprmf
+model: bprmf
+out_path: ${results_dir}/baseline_bprmf.json

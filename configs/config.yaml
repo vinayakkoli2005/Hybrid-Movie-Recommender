@@ -1,0 +1,21 @@
+# =============================================================================
+# Master config — CF Pipeline on MovieLens 1M
+# =============================================================================
+# Usage:
+#   python scripts/eval.py                          # uses all defaults
+#   python scripts/eval.py experiment=baseline_itemknn
+#   python scripts/eval.py experiment=ease eval.split=val
+#   python scripts/eval.py seed=0 experiment=lightgcn
+# =============================================================================
+
+defaults:
+  - data: ml1m
+  - eval: ncf_protocol
+  - experiment: baseline_pop
+  - _self_
+
+# Global reproducibility seed — propagated to numpy / torch / random
+seed: 42
+
+# All experiment result JSONs are written under this directory
+results_dir: results

@@ -1,0 +1,25 @@
+# =============================================================================
+# Model: DCN-v2 (Deep & Cross Network v2) with MC-Dropout
+# =============================================================================
+# Combines an explicit feature cross network with a deep MLP.
+# MC-Dropout at inference time (T forward passes) produces a score mean and
+# an uncertainty estimate — the uncertainty is used as a feature for the
+# meta-learner (S4).
+# Reference: Wang et al., DCN V2, WWW 2021.
+# Expected HR@10 on ML-1M: ~0.74
+# =============================================================================
+
+name: dcnv2
+
+embedding_dim:   64
+cross_layers:    3          # number of cross network layers
+deep_layers:     [256, 128, 64]
+dropout:         0.1        # applied in both cross and deep sub-networks
+learning_rate:   0.001
+weight_decay:    1.0e-4
+n_epochs:        50
+batch_size:      2048
+n_neg_train:     4
+
+# MC-Dropout inference settings
+mc_dropout_passes: 20       # number of stochastic forward passes at eval time

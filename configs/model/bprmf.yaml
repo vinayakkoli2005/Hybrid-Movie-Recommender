@@ -1,0 +1,17 @@
+# =============================================================================
+# Model: BPR-MF (Bayesian Personalised Ranking with Matrix Factorisation)
+# =============================================================================
+# Optimises a pairwise ranking objective (positive > negative) via SGD.
+# Reference: Rendle et al., BPR: Bayesian Personalised Ranking from Implicit
+# Feedback, UAI 2009.
+# Expected HR@10 on ML-1M: ~0.65
+# =============================================================================
+
+name: bprmf
+
+embedding_dim: 64
+learning_rate: 0.001
+weight_decay:  1.0e-4    # L2 regularisation on embeddings
+n_epochs:      50
+batch_size:    1024
+n_neg_train:   4         # negatives sampled per positive during training

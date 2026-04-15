@@ -1,0 +1,15 @@
+# =============================================================================
+# Model: EASE^R (Embarrassingly Shallow Autoencoders for Sparse Data)
+# =============================================================================
+# Closed-form solution — no gradient descent, no embeddings.
+# Solves: W* = I - P·diag(1/diag(P))  where P = (X^T X + λI)^{-1}
+# Diagonal of W is zeroed to prevent trivial self-reconstruction.
+# Reference: Steck, H., EASE^R, WWW 2019.
+# Expected HR@10 on ML-1M: ~0.72
+# =============================================================================
+
+name: ease
+
+# L2 regularisation strength — the only hyperparameter
+# Larger λ → more shrinkage → better generalisation for sparse data
+lambda_: 500.0

@@ -1,0 +1,15 @@
+# =============================================================================
+# Model: ItemKNN (cosine on co-occurrence matrix)
+# =============================================================================
+# Memory-based CF baseline. Scores a candidate item i for user u by summing
+# cosine similarities between i and all items in u's training history.
+# Expected HR@10 on ML-1M: ~0.60
+# =============================================================================
+
+name: itemknn
+
+# Number of nearest neighbours to use when scoring
+k_neighbours: 20
+
+# Shrinkage term added to denominator to avoid inflating similarity for rare items
+shrinkage: 10

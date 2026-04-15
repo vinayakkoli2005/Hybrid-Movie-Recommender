@@ -1,0 +1,28 @@
+# =============================================================================
+# Data config — MovieLens 1M + TMDB metadata join
+# =============================================================================
+# All paths are relative to the project root (where scripts are invoked from).
+# Parquet files are written by scripts/prepare_data.py (Task 10).
+# =============================================================================
+
+name: ml1m
+
+# Raw data directories
+raw_ml1m_dir:  data/raw/ml-1m
+raw_tmdb_dir:  data/raw/tmdb
+
+# Processed data directory (output of scripts/prepare_data.py)
+processed_dir: data/processed
+
+# Convenience path interpolations — resolved by OmegaConf at runtime
+train_path:      ${data.processed_dir}/train.parquet
+val_path:        ${data.processed_dir}/val.parquet
+test_path:       ${data.processed_dir}/test.parquet
+items_meta_path: ${data.processed_dir}/items_metadata.parquet
+
+# Dataset statistics (informational, not used in code)
+n_users:        6035
+n_items:        3807
+n_train:        561052
+binarize_threshold: 4       # ratings >= this are kept as positives
+min_interactions:   3       # users with fewer interactions are dropped

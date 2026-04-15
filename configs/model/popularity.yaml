@@ -1,0 +1,9 @@
+# =============================================================================
+# Model: Popularity Baseline
+# =============================================================================
+# Non-personalised baseline. Ranks every item by its global interaction count
+# in the training set. User-agnostic — same ranking for every user.
+# Expected HR@10 on ML-1M: ~0.57
+# =============================================================================
+
+name: popularity

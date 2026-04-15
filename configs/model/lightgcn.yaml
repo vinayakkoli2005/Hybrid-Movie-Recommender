@@ -1,0 +1,19 @@
+# =============================================================================
+# Model: LightGCN (Light Graph Convolutional Network)
+# =============================================================================
+# Propagates embeddings over the user-item bipartite graph using simplified
+# graph convolution (no feature transformation, no non-linearity).
+# Final embedding = mean of embeddings across all K propagation layers.
+# Reference: He et al., LightGCN, SIGIR 2020.
+# Expected HR@10 on ML-1M: ~0.76
+# =============================================================================
+
+name: lightgcn
+
+embedding_dim:  64
+n_layers:       3          # number of graph propagation layers
+learning_rate:  0.001
+weight_decay:   1.0e-4
+n_epochs:       50
+batch_size:     2048
+n_neg_train:    1          # BPR loss — 1 negative per positive
