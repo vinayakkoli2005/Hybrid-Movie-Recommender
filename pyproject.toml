@@ -35,7 +35,10 @@ package = true
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra -q"
-markers = ["integration: requires processed data on disk (run scripts/prepare_data.py first)"]
+markers = [
+  "integration: requires processed data on disk (run scripts/prepare_data.py first)",
+  "gpu: requires GPU + Llama-3.1-8B downloaded",
+]
 
 [tool.ruff]
 line-length = 100

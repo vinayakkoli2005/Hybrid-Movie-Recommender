@@ -1,0 +1,7 @@
+name: baseline_bpr
+model: bpr_mf
+emb_dim: 64
+n_epochs: 30
+lr: 1e-3
+batch_size: 4096
+out_path: ${results_dir}/baseline_bpr.json

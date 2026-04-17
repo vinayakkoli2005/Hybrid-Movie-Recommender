@@ -1,7 +1,8 @@
-# =============================================================================
-# Experiment: NeuMF Baseline
-# =============================================================================
-
-name:  baseline_neumf
+name: baseline_neumf
 model: neumf
+emb_dim: 32
+mlp_layers: [64, 32, 16]
+n_epochs: 20
+lr: 1e-3
+batch_size: 4096
 out_path: ${results_dir}/baseline_neumf.json

@@ -1,0 +1,10 @@
+name: dcn
+model: dcn
+emb_dim: 64
+cross_layers: 3
+deep: [256, 128]
+dropout: 0.3
+n_epochs: 20
+lr: 1e-3
+batch_size: 4096
+out_path: ${results_dir}/dcn.json

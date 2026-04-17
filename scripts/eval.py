@@ -62,6 +62,110 @@ def _build_model(cfg: DictConfig, train: pd.DataFrame):
         log.info("ItemKNN — k_neighbors=%d  shrinkage=%.1f", k, shr)
         return ItemKNNRanker(k_neighbors=k, shrinkage=shr).fit(train)
 
+    if model_name == "bpr_mf":
+        from cf_pipeline.models.bpr_mf import BPRMFRanker
+        emb_dim = int(cfg.experiment.get("emb_dim", 64))
+        n_epochs = int(cfg.experiment.get("n_epochs", 20))
+        lr = float(cfg.experiment.get("lr", 1e-3))
+        batch_size = int(cfg.experiment.get("batch_size", 1024))
+        weight_decay = float(cfg.experiment.get("weight_decay", 1e-5))
+        log.info(
+            "BPR-MF - emb_dim=%d  n_epochs=%d  lr=%.4g  batch_size=%d  weight_decay=%.4g",
+            emb_dim,
+            n_epochs,
+            lr,
+            batch_size,
+            weight_decay,
+        )
+        return BPRMFRanker(
+            emb_dim=emb_dim,
+            n_epochs=n_epochs,
+            lr=lr,
+            batch_size=batch_size,
+            weight_decay=weight_decay,
+        ).fit(train)
+
+    if model_name == "neumf":
+        from cf_pipeline.models.neumf import NeuMFRanker
+        emb_dim = int(cfg.experiment.get("emb_dim", 32))
+        mlp_layers = tuple(int(x) for x in cfg.experiment.get("mlp_layers", [64, 32, 16]))
+        n_epochs = int(cfg.experiment.get("n_epochs", 20))
+        lr = float(cfg.experiment.get("lr", 1e-3))
+        batch_size = int(cfg.experiment.get("batch_size", 4096))
+        log.info(
+            "NeuMF - emb_dim=%d  mlp_layers=%s  n_epochs=%d  lr=%.4g  batch_size=%d",
+            emb_dim,
+            mlp_layers,
+            n_epochs,
+            lr,
+            batch_size,
+        )
+        return NeuMFRanker(
+            emb_dim=emb_dim,
+            mlp_layers=mlp_layers,
+            n_epochs=n_epochs,
+            lr=lr,
+            batch_size=batch_size,
+        ).fit(train)
+
+    if model_name == "ease":
+        from cf_pipeline.models.ease import EASERRanker
+        reg_lambda = float(cfg.experiment.get("reg_lambda", 500.0))
+        log.info("EASE^R - reg_lambda=%.4g", reg_lambda)
+        return EASERRanker(reg_lambda=reg_lambda).fit(train)
+
+    if model_name == "lightgcn":
+        from cf_pipeline.models.lightgcn import LightGCNRanker
+        emb_dim = int(cfg.experiment.get("emb_dim", 64))
+        n_layers = int(cfg.experiment.get("n_layers", 3))
+        n_epochs = int(cfg.experiment.get("n_epochs", 200))
+        batch_size = int(cfg.experiment.get("batch_size", 8192))
+        lr = float(cfg.experiment.get("lr", 1e-3))
+        weight_decay = float(cfg.experiment.get("weight_decay", 1e-4))
+        log.info(
+            "LightGCN - emb_dim=%d  n_layers=%d  n_epochs=%d  batch_size=%d  lr=%.4g",
+            emb_dim,
+            n_layers,
+            n_epochs,
+            batch_size,
+            lr,
+        )
+        return LightGCNRanker(
+            emb_dim=emb_dim,
+            n_layers=n_layers,
+            n_epochs=n_epochs,
+            batch_size=batch_size,
+            lr=lr,
+            weight_decay=weight_decay,
+        ).fit(train)
+
+    if model_name == "dcn":
+        from cf_pipeline.models.dcn import DCNRanker
+        emb_dim = int(cfg.experiment.get("emb_dim", 64))
+        cross_layers = int(cfg.experiment.get("cross_layers", 3))
+        deep = tuple(int(x) for x in cfg.experiment.get("deep", [256, 128]))
+        dropout = float(cfg.experiment.get("dropout", 0.3))
+        n_epochs = int(cfg.experiment.get("n_epochs", 20))
+        lr = float(cfg.experiment.get("lr", 1e-3))
+        batch_size = int(cfg.experiment.get("batch_size", 4096))
+        log.info(
+            "DCN - emb_dim=%d  cross_layers=%d  deep=%s  dropout=%.2f  n_epochs=%d",
+            emb_dim,
+            cross_layers,
+            deep,
+            dropout,
+            n_epochs,
+        )
+        return DCNRanker(
+            emb_dim=emb_dim,
+            cross_layers=cross_layers,
+            deep=deep,
+            dropout=dropout,
+            n_epochs=n_epochs,
+            lr=lr,
+            batch_size=batch_size,
+        ).fit(train)
+
     raise ValueError(
         f"Unknown model '{model_name}'. "
         "Implement it in src/cf_pipeline/models/ and register it here."
