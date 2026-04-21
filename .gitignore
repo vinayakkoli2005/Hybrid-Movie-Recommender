@@ -31,5 +31,12 @@ report/*.aux
 report/*.log
 report/*.out
 
+# Large model files
+models/
+logs/
+
+# Large data files
+data/raw/
+
 # macOS
 .DS_Store
