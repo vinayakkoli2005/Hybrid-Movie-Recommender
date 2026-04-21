@@ -21,6 +21,7 @@ PROCESSED   = Path("data/processed")
 CHECKPOINTS = Path("checkpoints")
 
 # ── Load & precompute at startup ──────────────────────────────────────────────
+# eergr
 print("Loading data...")
 train   = pd.read_parquet(PROCESSED / "train.parquet")
 cf_val  = pd.read_parquet(PROCESSED / "cf_scores_val.parquet")
