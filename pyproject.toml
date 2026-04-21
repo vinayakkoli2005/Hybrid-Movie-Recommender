@@ -37,7 +37,7 @@ testpaths = ["tests"]
 addopts = "-ra -q"
 markers = [
   "integration: requires processed data on disk (run scripts/prepare_data.py first)",
-  "gpu: requires GPU + Llama-3.1-8B downloaded",
+  "gpu: requires GPU + gemma-2-9b-it downloaded",
 ]
 
 [tool.ruff]

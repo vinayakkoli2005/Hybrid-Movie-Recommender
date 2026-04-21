@@ -1,0 +1,38 @@
+{
+  "experiment": "tuned_lambdarank_pipeline",
+  "best_val_ndcg": 0.7184,
+  "best_params": {
+    "learning_rate": 0.17113523312516837,
+    "num_leaves": 277,
+    "min_child_samples": 81,
+    "feature_fraction": 0.9983673073827859,
+    "bagging_fraction": 0.770824427733076,
+    "bagging_freq": 5,
+    "lambda_l1": 6.452141243884533e-08,
+    "lambda_l2": 8.394237848032681e-07,
+    "min_gain_to_split": 0.6823159484391735,
+    "max_depth": 3
+  },
+  "metrics": {
+    "HR@1": 0.5461,
+    "NDCG@1": 0.5461,
+    "MAP@1": 0.5461,
+    "MAR@1": 0.5461,
+    "Novelty@1": 10.3051,
+    "HR@5": 0.636,
+    "NDCG@5": 0.589,
+    "MAP@5": 0.5738,
+    "MAR@5": 0.636,
+    "Novelty@5": 10.8116,
+    "HR@10": 0.7934,
+    "NDCG@10": 0.6403,
+    "MAP@10": 0.5952,
+    "MAR@10": 0.7934,
+    "Novelty@10": 10.9786,
+    "HR@20": 0.9087,
+    "NDCG@20": 0.6698,
+    "MAP@20": 0.6035,
+    "MAR@20": 0.9087,
+    "Novelty@20": 11.2014
+  }
+}

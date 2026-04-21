@@ -1,0 +1,21 @@
+\begin{table}[t]
+\centering
+\caption{Recommendation performance on ML-1M (leave-one-out, 99 negatives).}
+\label{tab:results}
+\begin{tabular}{lcccccc}
+\toprule
+Model & HR@5 & HR@10 & HR@20 & NDCG@5 & NDCG@10 & NDCG@20 \\
+\midrule
+Popularity & — & 0.4981 & — & — & 0.2768 & — \\
+ItemKNN & — & 0.6810 & — & — & 0.3992 & — \\
+BPR-MF & — & 0.6189 & — & — & 0.3477 & — \\
+EASE\^{}R & — & 0.6953 & — & — & 0.4296 & — \\
+LightGCN & — & 0.4976 & — & — & 0.2757 & — \\
+DCN-v2 & — & 0.6378 & — & — & 0.3591 & — \\
+NeuMF & — & 0.6838 & — & — & 0.3942 & — \\
+\midrule
+Hybrid (CF only) & 0.5390 & 0.7175 & 0.8681 & 0.3745 & 0.4325 & 0.4709 \\
+Hybrid (LambdaRank + Optuna) & \textbf{0.6360} & \textbf{0.7934} & \textbf{0.9087} & \textbf{0.5890} & \textbf{0.6403} & \textbf{0.6698} \\
+\bottomrule
+\end{tabular}
+\end{table}
