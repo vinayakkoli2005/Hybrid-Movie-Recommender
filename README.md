@@ -18,6 +18,12 @@
   <img src="https://img.shields.io/badge/License-MIT-lightgrey?style=flat-square"/>
 </p>
 
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=NHvm4Z_XI8Q">
+    <img src="https://img.shields.io/badge/▶%20Demo%20Video-YouTube-red?style=for-the-badge&logo=youtube"/>
+  </a>
+</p>
+
 ---
 
 ## Overview
