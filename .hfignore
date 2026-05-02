@@ -1,0 +1,22 @@
+# Exclude large LLM base model weights — not needed at runtime
+models/
+
+# Exclude raw data — processed artifacts are already in data/processed/
+data/raw/
+
+# Exclude LoRA training checkpoints — only final adapter needed (and app.py doesn't use it)
+checkpoints/lora/
+
+# Exclude Optuna study DB
+checkpoints/optuna_study.db
+
+# Exclude pycache
+__pycache__/
+*.pyc
+
+# Exclude dev/test files
+tests/
+docs/
+scripts/
+configs/
+*.sh

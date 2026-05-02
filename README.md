@@ -1,17 +1,20 @@
-# CF Pipeline — MovieLens 1M
+---
+title: Hybrid Movie Recommender
+emoji: 🎬
+colorFrom: purple
+colorTo: pink
+sdk: gradio
+sdk_version: 6.14.0
+app_file: app.py
+pinned: false
+---
 
-Hybrid CF pipeline (EASE^R + LightGCN + DCN-v2 + LLM RAG + meta-learner) for HR@K / NDCG@K on MovieLens 1M.
+# Hybrid Movie Recommendation System
 
-## Setup
-```bash
-uv sync
-uv run python scripts/prepare_data.py
-uv run pytest
-```
+End-to-end multi-stage recommendation pipeline on MovieLens-1M.
 
-## Run an experiment
-```bash
-uv run python scripts/eval.py +experiment=baseline_pop
-```
+**Pipeline:** 7-model ensemble (BPR, LightGCN, NeuMF, SASRec, EASE, DCN, Popularity) → 13-dim feature vector → LightGBM LambdaRank meta-learner tuned with Optuna.
 
-See `docs/superpowers/specs/` for design and `docs/superpowers/plans/` for build plan.
+**LLM stage:** Gemma-2 fine-tuned with LoRA; Yes-token logit probabilities used as semantic features.
+
+**Metrics:** HR@10 = 0.797 · NDCG@10 = 0.636 · Coverage = 78% · Personalisation = 0.99

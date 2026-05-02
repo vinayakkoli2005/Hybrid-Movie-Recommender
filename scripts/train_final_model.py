@@ -27,6 +27,52 @@ RESULTS     = Path("results")
 CHECKPOINTS = Path("checkpoints")
 
 
+def _train_with_device_fallback(
+    params: dict,
+    X_tr,
+    y_tr,
+    g_tr,
+    X_ev,
+    y_ev,
+    g_ev,
+    feat_cols: list[str],
+    log,
+):
+    """Train LightGBM, preferring GPU but falling back to CPU if needed."""
+    common = {
+        "objective": "lambdarank",
+        "metric": "ndcg",
+        "eval_at": [5, 10],
+        "verbose": -1,
+        "label_gain": [0, 1],
+    }
+    common.update(params)
+
+    tr_ds = lgb.Dataset(X_tr, label=y_tr, group=g_tr, feature_name=feat_cols)
+    ev_ds = lgb.Dataset(X_ev, label=y_ev, group=g_ev, reference=tr_ds)
+    callbacks = [lgb.early_stopping(50, verbose=False), lgb.log_evaluation(0)]
+
+    for device_params, label in [
+        ({"device": "gpu", "gpu_platform_id": 0, "gpu_device_id": 0}, "GPU"),
+        ({"device": "cpu"}, "CPU"),
+    ]:
+        train_params = dict(common)
+        train_params.update(device_params)
+        try:
+            log.info("Training final model on %s…", label)
+            return lgb.train(
+                train_params,
+                tr_ds,
+                num_boost_round=2000,
+                valid_sets=[ev_ds],
+                callbacks=callbacks,
+            )
+        except Exception as exc:
+            log.warning("LightGBM %s training failed: %s", label, exc)
+
+    raise RuntimeError("LightGBM training failed on both GPU and CPU.")
+
+
 def main() -> None:
     log = get_logger("train_final_model")
     RESULTS.mkdir(parents=True, exist_ok=True)
@@ -70,24 +116,17 @@ def main() -> None:
     X_ev, y_ev, g_ev = split_Xy_grouped(df_ev, ENHANCED_FEAT_COLS)
     X_te, _,  _      = split_Xy_grouped(df_test, ENHANCED_FEAT_COLS)
 
-    base = {
-        "objective":    "lambdarank",
-        "metric":       "ndcg",
-        "eval_at":      [5, 10],
-        "verbose":      -1,
-        "label_gain":   [0, 1],
-        "device":       "gpu",
-        "gpu_platform_id": 0,
-        "gpu_device_id":   0,
-    }
-    base.update(params)
-
-    log.info("Training final model on full val set…")
-    tr_ds = lgb.Dataset(X_tr, label=y_tr, group=g_tr, feature_name=ENHANCED_FEAT_COLS)
-    ev_ds = lgb.Dataset(X_ev, label=y_ev, group=g_ev, reference=tr_ds)
-    callbacks = [lgb.early_stopping(50, verbose=False), lgb.log_evaluation(0)]
-    model = lgb.train(base, tr_ds, num_boost_round=2000,
-                      valid_sets=[ev_ds], callbacks=callbacks)
+    model = _train_with_device_fallback(
+        params,
+        X_tr,
+        y_tr,
+        g_tr,
+        X_ev,
+        y_ev,
+        g_ev,
+        ENHANCED_FEAT_COLS,
+        log,
+    )
 
     # Evaluate on test
     log.info("Evaluating on test set…")

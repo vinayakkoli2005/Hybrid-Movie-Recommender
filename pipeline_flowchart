@@ -1,0 +1,94 @@
+digraph CF_Pipeline {
+	bgcolor="#0d0d1a" fontname="Segoe UI" nodesep=0.5 pad=0.5 rankdir=TB ranksep=0.7
+	subgraph cluster_data {
+		bgcolor="#13131f" color="#2a2a3a" fontcolor="#888" label="  Stage 1 · Data Preparation  " style=rounded
+		raw [label="ML-1M Dataset
+1M ratings · 6K users · 4K movies" color="#8be9fd" fillcolor="#1e1e2e" fontcolor="#8be9fd" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+		split [label="Leave-One-Out Split
+train / val / test" color="#8be9fd" fillcolor="#1e1e2e" fontcolor="#8be9fd" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+		neg [label="99 Negatives / User
+for evaluation" color="#8be9fd" fillcolor="#1e1e2e" fontcolor="#8be9fd" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+		raw -> split [label="" color="#555577" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+		split -> neg [label="" color="#555577" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+	}
+	subgraph cluster_cf {
+		bgcolor="#13131f" color="#2a2a3a" fontcolor="#888" label="  Stage 2 · Base CF Models (Candidate Generation)  " style=rounded
+		pop [label=Popularity color="#ff79c6" fillcolor="#1e1e2e" fontcolor="#ff79c6" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+		knn [label=ItemKNN color="#ff79c6" fillcolor="#1e1e2e" fontcolor="#ff79c6" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+		ease [label=EASE color="#ff79c6" fillcolor="#1e1e2e" fontcolor="#ff79c6" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+		bpr [label=BPR color="#ff79c6" fillcolor="#1e1e2e" fontcolor="#ff79c6" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+		lgcn [label=LightGCN color="#ff79c6" fillcolor="#1e1e2e" fontcolor="#ff79c6" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+		dcn [label=DCN color="#ff79c6" fillcolor="#1e1e2e" fontcolor="#ff79c6" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+		neumf [label=NeuMF color="#ff79c6" fillcolor="#1e1e2e" fontcolor="#ff79c6" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+		sasrec [label="SASRec
+(Sequential Transformer)" color="#ff79c6" fillcolor="#1e1e2e" fontcolor="#ff79c6" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+		scores [label="cf_scores_val/test.parquet
+(user, item, 8 scores)" color="#ffb86c" fillcolor="#1e1e2e" fontcolor="#ffb86c" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+		pop -> scores [label="" color="#555577" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+		knn -> scores [label="" color="#555577" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+		ease -> scores [label="" color="#555577" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+		bpr -> scores [label="" color="#555577" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+		lgcn -> scores [label="" color="#555577" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+		dcn -> scores [label="" color="#555577" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+		neumf -> scores [label="" color="#555577" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+		sasrec -> scores [label="" color="#555577" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+	}
+	subgraph cluster_llm {
+		bgcolor="#13131f" color="#2a2a3a" fontcolor="#888" label="  Stage 3 · LLM Features (Optional)  " style=rounded
+		lora [label="LoRA Fine-tuned LLM" color="#50fa7b" fillcolor="#1e1e2e" fontcolor="#50fa7b" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+		yes_prob [label="yes_prob per (user, item)
+llm_features.parquet" color="#50fa7b" fillcolor="#1e1e2e" fontcolor="#50fa7b" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+		lora -> yes_prob [label="" color="#555577" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+	}
+	subgraph cluster_feat {
+		bgcolor="#13131f" color="#2a2a3a" fontcolor="#888" label="  Stage 4 · Feature Engineering  " style=rounded
+		rank_norm [label="Rank-Normalize CF Scores
+(per-user percentile)" color="#bd93f9" fillcolor="#1e1e2e" fontcolor="#bd93f9" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+		user_feat [label="User Features
+(n_interactions, avg_pop)" color="#bd93f9" fillcolor="#1e1e2e" fontcolor="#bd93f9" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+		item_feat [label="Item Features
+(n_interactions, pop_rank_pct)" color="#bd93f9" fillcolor="#1e1e2e" fontcolor="#bd93f9" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+		feat_vec [label="13-dim Feature Vector
+per (user, item) pair" color="#ffb86c" fillcolor="#1e1e2e" fontcolor="#ffb86c" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+		rank_norm -> feat_vec [label="" color="#555577" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+		user_feat -> feat_vec [label="" color="#555577" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+		item_feat -> feat_vec [label="" color="#555577" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+	}
+	subgraph cluster_hpo {
+		bgcolor="#13131f" color="#2a2a3a" fontcolor="#888" label="  Stage 5 · Hyperparameter Optimization  " style=rounded
+		optuna [label="Optuna TPE
+80 Trials · SQLite persistence" color="#f1fa8c" fillcolor="#1e1e2e" fontcolor="#f1fa8c" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+		params [label="Best Params
+lr=0.08 · leaves=98 · depth=3" color="#f1fa8c" fillcolor="#1e1e2e" fontcolor="#f1fa8c" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+		optuna -> params [label="" color="#555577" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+	}
+	subgraph cluster_train {
+		bgcolor="#13131f" color="#2a2a3a" fontcolor="#888" label="  Stage 6 · Final Training  " style=rounded
+		lgbm [label="LightGBM LambdaRank
+(optimizes NDCG directly)" color="#ffb86c" fillcolor="#1e1e2e" fontcolor="#ffb86c" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+		ckpt [label="meta_lgbm_tuned.pkl" color="#ffb86c" fillcolor="#1e1e2e" fontcolor="#ffb86c" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+		lgbm -> ckpt [label="" color="#555577" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+	}
+	subgraph cluster_eval {
+		bgcolor="#13131f" color="#2a2a3a" fontcolor="#888" label="  Stage 7 · Evaluation  " style=rounded
+		metrics [label="HR · NDCG · MAP · MAR · Novelty
+@1 / @5 / @10 / @20" color="#8be9fd" fillcolor="#1e1e2e" fontcolor="#8be9fd" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+		results [label="HR@10≈0.79  NDCG@10≈0.62" color="#8be9fd" fillcolor="#1e1e2e" fontcolor="#8be9fd" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+		metrics -> results [label="" color="#555577" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+	}
+	subgraph cluster_ui {
+		bgcolor="#13131f" color="#2a2a3a" fontcolor="#888" label="  Stage 8 · Gradio UI  " style=rounded
+		ui [label="Gradio App · port 7860
+User Selector · Top-20 Recs · Movie Prediction" color="#ff79c6" fillcolor="#1e1e2e" fontcolor="#ff79c6" fontname="Segoe UI Bold" fontsize=13 margin="0.2,0.12" shape=box style="filled,rounded"]
+	}
+	neg -> pop [label="" color="#444466" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+	neg -> sasrec [label="" color="#444466" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+	scores -> rank_norm [label="" color="#444466" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+	yes_prob -> feat_vec [label="" color="#444466" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+	feat_vec -> optuna [label="" color="#444466" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+	params -> lgbm [label="" color="#444466" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+	feat_vec -> lgbm [label="" color="#444466" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+	ckpt -> metrics [label="" color="#444466" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+	results -> ui [label="" color="#444466" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+	ckpt -> ui [label="" color="#444466" fontcolor="#888888" fontname="Segoe UI" fontsize=10 penwidth=1.8]
+}
